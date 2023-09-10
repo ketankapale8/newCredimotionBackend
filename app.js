@@ -11,13 +11,13 @@ app.use(express.urlencoded({extended:true}))
 app.use(cookieParser());
 
 const corsOptions = {
-    origin: "http://localhost:3000",
+    origin : "http://localhost:3000",
     credentials : true , 
     methods : 'GET ,POST ,PUT , PATCH , DELETE , OPTIONS',
     allowedHeaders : 'X-Requested-With , Content-Type , Authorization'
 }
 
-app.use(cors(corsOptions()))
+app.use(cors(corsOptions))
 app.use('/api/v1', UserRouter);
 
 app.get('/', (req,res)=>{
