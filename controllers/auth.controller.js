@@ -7,14 +7,17 @@ import jwt from "jsonwebtoken";
 export const register = async (req, res, next) => {
   try {
     const hash = bcrypt.hashSync(req.body.password, 5);
+    const otp = Math.floor(Math.random() * 1000000);
     const newUser = new User({
       ...req.body,
+      otp,
+      otp_expiry: new Date(Date.now() + process.env.OTP_EXPIRY * 60 * 60* 10000),
       password: hash,
     });
 
     await newUser.save();
     await sendMail(
-        email,
+        req.body.email,
         "Please verify your account for Credimotion",
         `Your OTP is ${otp}`
       );
