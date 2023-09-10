@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 
 export const register = async (req, res, next) => {
   try {
-    const hash = bcrypt.hashSync(req.body.password, 5);
+    const hash = bcrypt.hashSync(req.body.password, 15);
     const otp = Math.floor(Math.random() * 1000000);
     const newUser = new User({
       ...req.body,
@@ -28,21 +28,23 @@ export const register = async (req, res, next) => {
 };
 export const login = async (req, res, next) => {
   try {
-    const user = await User.findOne({ email: req.body.email });
+    // const { email , password} = req.body;
 
+    const user = await User.findOne({ name : req.body.name });
+    
     if (!user) return next(createError(404, "User not found!"));
-
+    
     const isCorrect = bcrypt.compareSync(req.body.password, user.password);
     if (!isCorrect)
-      return next(createError(400, "Wrong password or username!"));
-
-    const token = jwt.sign(
-      {
-        id: user._id,
-      },
-      process.env.JWT_SECRET
+    return next(createError(400, "Wrong password or username!"));
+  
+  const token = jwt.sign(
+    {
+      id: user._id,
+    },
+    process.env.JWT_SECRET
     );
-
+    
     const { password, ...info } = user._doc;
     res
       .cookie("accessToken", token, {
@@ -51,6 +53,7 @@ export const login = async (req, res, next) => {
       .status(200)
       .send(info);
   } catch (err) {
+    // res.status(500).send("Something went wrong..")
     next(err);
   }
 };
