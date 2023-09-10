@@ -20,7 +20,7 @@ app.use(cors())
 app.use('/api/v1', UserRouter);
 
 app.get('/', (req,res)=>{
-    res.send('Running Credimotion Backend..')
+    res.send('Running New.. Credimotion Backend..')
 })
 
 
